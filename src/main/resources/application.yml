@@ -1,0 +1,13 @@
+micronaut:
+  application:
+    name: home-budget
+mongodb:
+  uri: ${MONGO_URI:`mongodb://localhost:27017/database`}
+
+db:
+  name: lab
+
+jackson:
+  serialization:
+    writeDatesAsTimestamps: false
+  property-naming-strategy: SNAKE_CASE
