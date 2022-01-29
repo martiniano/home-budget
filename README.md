@@ -8,6 +8,11 @@ This project was inspired on [Alura Challenge Back-End](https://www.alura.com.br
 - [Micronault](https://micronaut.io)
 - [MongoDb](https://mongodb.com)
 
+## Building Shadow Jar
+``` 
+$ ./gradlew shadowJar
+``` 
+
 ## Published with
 - [AWS Lambda](https://aws.amazon.com/pt/lambda/)
 - [AWS API Gateway](https://aws.amazon.com/pt/api-gateway)
