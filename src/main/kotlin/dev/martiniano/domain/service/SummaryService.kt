@@ -17,7 +17,7 @@ class SummaryService(
     fun summarize(year: Int, month: Int): Summary {
         val yearMonth = YearMonth.of(year, month)
         val startDateTime = yearMonth.atDay(1).atStartOfDay()
-        val endDateTime =  LocalDateTime.of(yearMonth.atEndOfMonth(), LocalTime.MAX);
+        val endDateTime = LocalDateTime.of(yearMonth.atEndOfMonth(), LocalTime.MAX)
         val incomeCategoriesTotal = incomeRepository.sumCategoriesAmountInPeriod(startDateTime, endDateTime)
         val expenseCategoriesTotal = expenseRepository.sumCategoriesAmountInPeriod(startDateTime, endDateTime)
         val incomeTotal = incomeCategoriesTotal.values.sum()

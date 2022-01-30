@@ -24,14 +24,14 @@ class IncomeService(private val incomeRepository: IncomeRepository) {
         return insertedIncome.insertedId
     }
 
-    fun findAll(description: String?):  List<Income> {
+    fun findAll(description: String?): List<Income> {
         return incomeRepository.findAll(description)
     }
 
     fun findAllInMonth(year: Int, month: Int): List<Income> {
         val yearMonth = YearMonth.of(year, month)
         val startDateTime = yearMonth.atDay(1).atStartOfDay()
-        val endDateTime =  LocalDateTime.of(yearMonth.atEndOfMonth(), LocalTime.MAX);
+        val endDateTime = LocalDateTime.of(yearMonth.atEndOfMonth(), LocalTime.MAX)
         return incomeRepository.findAllInPeriod(startDateTime, endDateTime)
     }
 
@@ -50,13 +50,13 @@ class IncomeService(private val incomeRepository: IncomeRepository) {
             )
         )
         if (updateResult.modifiedCount == 0L)
-            throw throw RuntimeException("Income with id $id was not updated")
+            throw throw NotFoundException("Income with id $id was not updated")
         return findById(id)
     }
 
     fun deleteById(id: String) {
         val deleteResult = incomeRepository.deleteById(id)
         if (deleteResult.deletedCount == 0L)
-            throw throw RuntimeException("Income with id $id was not deleted")
+            throw throw NotFoundException("Income with id $id was not deleted")
     }
 }

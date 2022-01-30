@@ -14,7 +14,6 @@ import org.bson.Document
 import org.bson.types.ObjectId
 import java.time.LocalDateTime
 
-
 @Singleton
 class IncomeRepository(private val mongoClient: MongoClient, private val mongoConf: MongoDbConfiguration) {
 
@@ -23,16 +22,18 @@ class IncomeRepository(private val mongoClient: MongoClient, private val mongoCo
             .insertOne(income)
 
     fun findAll(description: String?): List<Income> =
-        if(description != null)
+        if (description != null)
             getCollection().find(Filters.regex("description", ".*$description.*")).toList()
         else
             getCollection().find().toList()
 
     fun findAllInPeriod(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<Income> =
-            getCollection().find(Filters.and(
+        getCollection().find(
+            Filters.and(
                 Filters.gte("date", startDateTime),
                 Filters.lte("date", endDateTime)
-            )).toList()
+            )
+        ).toList()
 
     fun sumAmountInPeriod(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Double =
         getCollection().aggregate(

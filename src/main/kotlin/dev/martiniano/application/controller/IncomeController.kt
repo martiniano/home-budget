@@ -4,7 +4,14 @@ import dev.martiniano.application.dto.IncomeRequest
 import dev.martiniano.application.dto.IncomeResponse
 import dev.martiniano.domain.service.IncomeService
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.annotation.*
+import io.micronaut.http.annotation.Body
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Delete
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.PathVariable
+import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.Put
+import io.micronaut.http.annotation.QueryValue
 import java.net.URI
 
 @Controller("income")
@@ -44,7 +51,7 @@ class IncomeController(private val incomeService: IncomeService) {
         )
     }
 
-    //TODO("Check if id exists")
+    // TODO("Check if id exists")
     @Put("/{id}")
     fun update(
         @PathVariable id: String,

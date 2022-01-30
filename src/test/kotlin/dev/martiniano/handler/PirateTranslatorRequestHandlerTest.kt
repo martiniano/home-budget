@@ -1,10 +1,5 @@
 package dev.martiniano.handler
 
-import dev.martiniano.application.handler.HandlerInput
-import dev.martiniano.application.handler.SampleRequestHandler
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
-
 class PirateTranslatorRequestHandlerTest {
 
 //    @Test
@@ -18,5 +13,4 @@ class PirateTranslatorRequestHandlerTest {
 //        Assertions.assertEquals(output.pirateMessage, "Ahoy!")
 //        fortuneRequestHandler.applicationContext.close()
 //    }
-
 }

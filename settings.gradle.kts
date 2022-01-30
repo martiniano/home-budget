@@ -1,2 +1,2 @@
 
-rootProject.name="home-budget"
+rootProject.name = "home-budget"

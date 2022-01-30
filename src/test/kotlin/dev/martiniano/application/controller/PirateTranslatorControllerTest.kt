@@ -1,16 +1,4 @@
 package dev.martiniano.application.controller
-import com.amazonaws.serverless.proxy.internal.testutils.AwsProxyRequestBuilder
-import com.amazonaws.serverless.proxy.internal.testutils.MockLambdaContext
-import com.amazonaws.services.lambda.runtime.Context
-import com.fasterxml.jackson.databind.ObjectMapper
-import dev.martiniano.application.handler.HandlerInput
-import io.micronaut.function.aws.proxy.MicronautLambdaHandler
-import io.micronaut.http.HttpHeaders
-import io.micronaut.http.HttpMethod
-import io.micronaut.http.HttpStatus
-import io.micronaut.http.MediaType
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
 
 class PirateTranslatorControllerTest {
 

@@ -13,4 +13,4 @@ data class Income(
     var amount: Double,
     var category: IncomeCategory = IncomeCategory.OTHERS,
     var date: LocalDateTime = LocalDateTime.now(Clock.systemUTC())
-    )
+)

@@ -1,8 +1,8 @@
 package dev.martiniano.application
 
-import io.micronaut.runtime.Micronaut.*
+import io.micronaut.runtime.Micronaut.build
 
-fun main(args: Array<String>) {
+fun main(vararg args: String) {
     build()
         .args(*args)
         .packages("dev.martiniano")

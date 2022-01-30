@@ -14,7 +14,6 @@ import org.bson.Document
 import org.bson.types.ObjectId
 import java.time.LocalDateTime
 
-
 @Singleton
 class ExpenseRepository(private val mongoClient: MongoClient, private val mongoConf: MongoDbConfiguration) {
 
@@ -23,16 +22,18 @@ class ExpenseRepository(private val mongoClient: MongoClient, private val mongoC
             .insertOne(expense)
 
     fun findAll(description: String?): List<Expense> =
-        if(description != null)
+        if (description != null)
             getCollection().find(Filters.regex("description", ".*$description.*")).toList()
         else
             getCollection().find().toList()
 
     fun findAllInPeriod(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<Expense> =
-        getCollection().find(Filters.and(
-            Filters.gte("date", startDateTime),
-            Filters.lte("date", endDateTime)
-        )).toList()
+        getCollection().find(
+            Filters.and(
+                Filters.gte("date", startDateTime),
+                Filters.lte("date", endDateTime)
+            )
+        ).toList()
 
     fun sumAmountInPeriod(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Double =
         getCollection().aggregate(
@@ -76,5 +77,4 @@ class ExpenseRepository(private val mongoClient: MongoClient, private val mongoC
     private fun getCollection() =
         mongoClient.getDatabase(mongoConf.name)
             .getCollection("expense", Expense::class.java)
-
 }

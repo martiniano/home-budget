@@ -12,7 +12,7 @@ class SampleRequestHandler : MicronautRequestHandler<HandlerInput?, HandlerOutpu
         input?.let {
             return HandlerOutput(it.message, translate(it.message))
         }
-        return HandlerOutput("", "");
+        return HandlerOutput("", "")
     }
 
     fun translate(message: String): String {

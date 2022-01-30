@@ -24,14 +24,14 @@ class ExpenseService(private val expenseRepository: ExpenseRepository) {
         return insertedExpense.insertedId
     }
 
-    fun findAll(description: String?):  List<Expense> {
+    fun findAll(description: String?): List<Expense> {
         return expenseRepository.findAll(description)
     }
 
     fun findAllInMonth(year: Int, month: Int): List<Expense> {
         val yearMonth = YearMonth.of(year, month)
         val startDateTime = yearMonth.atDay(1).atStartOfDay()
-        val endDateTime =  LocalDateTime.of(yearMonth.atEndOfMonth(), LocalTime.MAX);
+        val endDateTime = LocalDateTime.of(yearMonth.atEndOfMonth(), LocalTime.MAX)
         return expenseRepository.findAllInPeriod(startDateTime, endDateTime)
     }
 
@@ -51,13 +51,13 @@ class ExpenseService(private val expenseRepository: ExpenseRepository) {
             )
         )
         if (updateResult.modifiedCount == 0L)
-            throw throw RuntimeException("Expense with id $id was not updated")
+            throw throw NotFoundException("Expense with id $id was not updated")
         return findById(id)
     }
 
     fun deleteById(id: String) {
         val deleteResult = expenseRepository.deleteById(id)
         if (deleteResult.deletedCount == 0L)
-            throw throw RuntimeException("Expense with id $id was not deleted")
+            throw throw NotFoundException("Expense with id $id was not deleted")
     }
 }
