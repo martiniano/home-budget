@@ -30,26 +30,32 @@ micronaut {
 }
 
 dependencies {
-    implementation("io.micronaut:micronaut-runtime:3.2.7")
-    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime:3.0.0")
+    implementation("io.micronaut:micronaut-runtime:3.3.0")
+    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime:3.1.0")
     implementation("jakarta.annotation:jakarta.annotation-api:2.0.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.10")
-    implementation("io.micronaut:micronaut-validation:3.2.7")
+    implementation("io.micronaut:micronaut-validation:3.3.0")
 
-    implementation("io.micronaut.aws:micronaut-function-aws:3.1.0")
-    implementation("io.micronaut.aws:micronaut-function-aws-api-proxy:3.1.0")
-
+    implementation("io.micronaut.aws:micronaut-function-aws:3.1.1")
+    implementation("io.micronaut.aws:micronaut-function-aws-api-proxy:3.1.1")
+    implementation("io.micronaut.security:micronaut-security-annotations:3.3.0")
+    implementation("io.micronaut.security:micronaut-security-jwt:3.3.0")
     implementation("io.micronaut.mongodb:micronaut-mongo-sync:4.0.0")
+    implementation("io.micronaut.reactor:micronaut-reactor:2.1.1")
+    implementation("io.micronaut.reactor:micronaut-reactor-http-client:2.1.1")
     implementation("jakarta.annotation:jakarta.annotation-api:2.0.0")
+
+    implementation("org.jasypt:jasypt:1.9.3")
 
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 
-    testImplementation("io.micronaut:micronaut-http-client:3.2.7")
+    testImplementation("io.micronaut:micronaut-http-client:3.3.0")
     testImplementation("org.testcontainers:junit-jupiter:1.16.3")
     testImplementation("org.testcontainers:mongodb:1.16.3")
     testImplementation("org.testcontainers:testcontainers:1.16.3")
+    testImplementation("io.mockk:mockk:1.12.2")
 
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
 }
@@ -141,6 +147,6 @@ tasks.check {
 }
 
 detekt {
-    input = files("src")
+    source = files("src")
     config = files("detekt-config.yml")
 }

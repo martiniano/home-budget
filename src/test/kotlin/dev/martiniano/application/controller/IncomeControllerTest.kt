@@ -8,20 +8,25 @@ import dev.martiniano.domain.enum.IncomeCategory
 import io.micronaut.http.HttpStatus
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.micronaut.test.support.TestPropertyProvider
+import jakarta.inject.Inject
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle
 import java.time.LocalDateTime
 
 @MicronautTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(Lifecycle.PER_CLASS)
 class IncomeControllerTest : TestPropertyProvider {
 
+    @Inject
+    lateinit var incomeClient: IncomeClient
+
     @Test
-    fun saveIncome(incomeClient: IncomeClient) {
+    fun saveIncome() {
         var incomes: List<IncomeResponse?>? = incomeClient.findAll()
         assertTrue(incomes!!.isEmpty())
 
@@ -59,9 +64,11 @@ class IncomeControllerTest : TestPropertyProvider {
         )
     }
 
-    @AfterAll
-    fun cleanup() {
-        MongoDbUtils.closeMongoDb()
+    companion object {
+        @AfterAll
+        fun cleanup() {
+            MongoDbUtils.closeMongoDb()
+        }
     }
 
     override fun getProperties(): Map<String, String> {

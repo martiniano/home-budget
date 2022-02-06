@@ -2,10 +2,12 @@ package dev.martiniano.client
 
 import dev.martiniano.application.dto.IncomeRequest
 import dev.martiniano.application.dto.IncomeResponse
+import io.micronaut.http.HttpHeaders.AUTHORIZATION
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Header
 import io.micronaut.http.annotation.PathVariable
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
@@ -16,6 +18,7 @@ import javax.validation.constraints.NotNull
 
 @Client("/income")
 interface IncomeClient {
+
     @Post
     fun save(@Body incomeRequest: @NotNull @Valid IncomeRequest): HttpStatus
 

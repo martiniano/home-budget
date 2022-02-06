@@ -12,8 +12,11 @@ import io.micronaut.http.annotation.PathVariable
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
 import io.micronaut.http.annotation.QueryValue
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.rules.SecurityRule
 import java.net.URI
 
+@Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("income")
 class IncomeController(private val incomeService: IncomeService) {
 
