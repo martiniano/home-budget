@@ -3,6 +3,8 @@ package dev.martiniano.domain.service
 import dev.martiniano.application.dto.IncomeRequest
 import dev.martiniano.domain.entity.Income
 import dev.martiniano.domain.exception.NotFoundException
+import dev.martiniano.domain.logging.Loggable
+import dev.martiniano.domain.logging.logger
 import dev.martiniano.domain.repository.IncomeRepository
 import jakarta.inject.Singleton
 import org.bson.BsonValue
@@ -11,11 +13,14 @@ import java.time.LocalTime
 import java.time.YearMonth
 
 @Singleton
-class IncomeService(private val incomeRepository: IncomeRepository) {
+class IncomeService(
+    private val incomeRepository: IncomeRepository,
+) : Loggable {
     fun createIncome(request: IncomeRequest): BsonValue? {
         val insertedIncome = incomeRepository.create(
             Income(
                 description = request.description,
+                userId = incomeRepository.security.id,
                 amount = request.amount,
                 category = request.category,
                 date = request.date
@@ -41,17 +46,22 @@ class IncomeService(private val incomeRepository: IncomeRepository) {
     }
 
     fun updateIncome(id: String, request: IncomeRequest): Income {
-        val updateResult = incomeRepository.update(
-            id = id,
-            update = Income(
-                description = request.description,
-                amount = request.amount,
-                date = request.date
-            )
+        val currentIncome = findById(id)
+        val updateIncome = currentIncome.copy(
+            description = request.description,
+            userId = incomeRepository.security.id,
+            amount = request.amount,
+            date = request.date
         )
-        if (updateResult.modifiedCount == 0L)
-            throw throw NotFoundException("Income with id $id was not updated")
-        return findById(id)
+        incomeRepository.update(
+            id = id,
+            update = updateIncome
+        ).also {
+            if (it.modifiedCount == 0L)
+                logger().info("Income with id $id was not updated")
+        }
+
+        return updateIncome
     }
 
     fun deleteById(id: String) {

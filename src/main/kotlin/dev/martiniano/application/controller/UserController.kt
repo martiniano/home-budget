@@ -1,7 +1,8 @@
 package dev.martiniano.application.controller
 
-import dev.martiniano.application.dto.UserRequest
+import dev.martiniano.application.dto.UserCreateRequest
 import dev.martiniano.application.dto.UserResponse
+import dev.martiniano.application.dto.UserUpdateRequest
 import dev.martiniano.domain.service.UserService
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Body
@@ -19,10 +20,9 @@ import java.net.URI
 @Controller("user")
 class UserController(private val userService: UserService) {
 
-    // TODO("NÃO PERMITIR ROLE ADMIN")
     @Secured(SecurityRule.IS_ANONYMOUS)
     @Post
-    fun create(@Body request: UserRequest): HttpResponse<Void> {
+    fun create(@Body request: UserCreateRequest): HttpResponse<Void> {
         val createdId = userService.createUser(request)
         return HttpResponse.created(
             URI.create(
@@ -49,13 +49,11 @@ class UserController(private val userService: UserService) {
         )
     }
 
-    // TODO("Check if id exists")
-    // TODO("ONLY FOR SAME USER")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Put("/{id}")
     fun update(
         @PathVariable id: String,
-        @Body request: UserRequest
+        @Body request: UserUpdateRequest
     ): HttpResponse<UserResponse> {
         val updatedUser = userService.updateUser(id, request)
         return HttpResponse.ok(

@@ -1,5 +1,7 @@
-package dev.martiniano.domain.exception
+package dev.martiniano.domain.exception.handler
 
+import dev.martiniano.domain.exception.BusinessException
+import dev.martiniano.domain.exception.ExceptionResponse
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Produces
@@ -8,12 +10,12 @@ import jakarta.inject.Singleton
 
 @Produces
 @Singleton
-class NotFoundExceptionHandler : ExceptionHandler<NotFoundException, HttpResponse<ExceptionResponse>> {
+class BusinessExceptionHandler : ExceptionHandler<BusinessException, HttpResponse<ExceptionResponse>> {
     override fun handle(
         request: HttpRequest<*>,
-        exception: NotFoundException
+        exception: BusinessException
     ): HttpResponse<ExceptionResponse> =
-        HttpResponse.notFound(
+        HttpResponse.badRequest(
             ExceptionResponse(
                 message = exception.message
             )

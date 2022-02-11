@@ -3,6 +3,8 @@ package dev.martiniano.domain.service
 import dev.martiniano.application.dto.ExpenseRequest
 import dev.martiniano.domain.entity.Expense
 import dev.martiniano.domain.exception.NotFoundException
+import dev.martiniano.domain.logging.Loggable
+import dev.martiniano.domain.logging.logger
 import dev.martiniano.domain.repository.ExpenseRepository
 import jakarta.inject.Singleton
 import org.bson.BsonValue
@@ -11,11 +13,14 @@ import java.time.LocalTime
 import java.time.YearMonth
 
 @Singleton
-class ExpenseService(private val expenseRepository: ExpenseRepository) {
+class ExpenseService(
+    private val expenseRepository: ExpenseRepository
+) : Loggable {
     fun createExpense(request: ExpenseRequest): BsonValue? {
         val insertedExpense = expenseRepository.create(
             Expense(
                 description = request.description,
+                userId = expenseRepository.security.id,
                 amount = request.amount,
                 category = request.category,
                 date = request.date
@@ -41,18 +46,24 @@ class ExpenseService(private val expenseRepository: ExpenseRepository) {
     }
 
     fun updateExpense(id: String, request: ExpenseRequest): Expense {
-        val updateResult = expenseRepository.update(
-            id = id,
-            update = Expense(
-                description = request.description,
-                amount = request.amount,
-                category = request.category,
-                date = request.date
-            )
+        val currentExpense = findById(id)
+        val updateExpense = currentExpense.copy(
+            description = request.description,
+            userId = expenseRepository.security.id,
+            amount = request.amount,
+            category = request.category,
+            date = request.date
         )
-        if (updateResult.modifiedCount == 0L)
-            throw throw NotFoundException("Expense with id $id was not updated")
-        return findById(id)
+
+        expenseRepository.update(
+            id = id,
+            update = updateExpense
+        ).also {
+            if (it.modifiedCount == 0L)
+                logger().info("Expense with id $id was not updated")
+        }
+
+        return updateExpense
     }
 
     fun deleteById(id: String) {

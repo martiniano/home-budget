@@ -54,7 +54,6 @@ class IncomeController(private val incomeService: IncomeService) {
         )
     }
 
-    // TODO("Check if id exists")
     @Put("/{id}")
     fun update(
         @PathVariable id: String,
@@ -65,6 +64,7 @@ class IncomeController(private val incomeService: IncomeService) {
             IncomeResponse.fromEntity(updatedIncome)
         )
     }
+
     @Delete("/{id}")
     fun deleteById(@PathVariable id: String): HttpResponse<Void> {
         incomeService.deleteById(id)

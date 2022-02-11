@@ -54,7 +54,6 @@ class ExpenseController(private val expenseService: ExpenseService) {
         )
     }
 
-    // TODO("Check if id exists")
     @Put("/{id}")
     fun update(
         @PathVariable id: String,

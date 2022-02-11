@@ -9,13 +9,18 @@ import com.mongodb.client.result.InsertOneResult
 import com.mongodb.client.result.UpdateResult
 import dev.martiniano.application.config.MongoDbConfiguration
 import dev.martiniano.domain.entity.Income
+import dev.martiniano.domain.service.HomeBudgetSecurityService
 import jakarta.inject.Singleton
 import org.bson.Document
 import org.bson.types.ObjectId
 import java.time.LocalDateTime
 
 @Singleton
-class IncomeRepository(private val mongoClient: MongoClient, private val mongoConf: MongoDbConfiguration) {
+class IncomeRepository(
+    override val mongoClient: MongoClient,
+    override val mongoConf: MongoDbConfiguration,
+    override val security: HomeBudgetSecurityService
+) : Repository {
 
     fun create(income: Income): InsertOneResult =
         getCollection()
@@ -23,13 +28,19 @@ class IncomeRepository(private val mongoClient: MongoClient, private val mongoCo
 
     fun findAll(description: String?): List<Income> =
         if (description != null)
-            getCollection().find(Filters.regex("description", ".*$description.*")).toList()
+            getCollection().find(
+                Filters.and(
+                    Filters.eq("userId", security.id),
+                    Filters.regex("description", ".*$description.*")
+                )
+            ).toList()
         else
-            getCollection().find().toList()
+            getCollection().find(Filters.eq("userId", security.id)).toList()
 
     fun findAllInPeriod(startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<Income> =
         getCollection().find(
             Filters.and(
+                Filters.eq("userId", security.id),
                 Filters.gte("date", startDateTime),
                 Filters.lte("date", endDateTime)
             )
@@ -38,7 +49,13 @@ class IncomeRepository(private val mongoClient: MongoClient, private val mongoCo
     fun sumAmountInPeriod(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Double =
         getCollection().aggregate(
             listOf(
-                Aggregates.match(Filters.and(Filters.gte("date", startDateTime), Filters.lte("date", endDateTime))),
+                Aggregates.match(
+                    Filters.and(
+                        Filters.eq("userId", security.id),
+                        Filters.gte("date", startDateTime),
+                        Filters.lte("date", endDateTime)
+                    )
+                ),
                 Aggregates.group(null, Accumulators.sum("amount", "\$amount")),
             ),
             Document::class.java
@@ -47,7 +64,13 @@ class IncomeRepository(private val mongoClient: MongoClient, private val mongoCo
     fun sumCategoriesAmountInPeriod(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Map<String, Double> =
         getCollection().aggregate(
             listOf(
-                Aggregates.match(Filters.and(Filters.gte("date", startDateTime), Filters.lte("date", endDateTime))),
+                Aggregates.match(
+                    Filters.and(
+                        Filters.eq("userId", security.id),
+                        Filters.gte("date", startDateTime),
+                        Filters.lte("date", endDateTime)
+                    )
+                ),
                 Aggregates.group("\$category", Accumulators.sum("amount", "\$amount")),
             ),
             Document::class.java
@@ -56,7 +79,10 @@ class IncomeRepository(private val mongoClient: MongoClient, private val mongoCo
     fun findById(id: String): Income? =
         getCollection()
             .find(
-                Filters.eq("_id", ObjectId(id))
+                Filters.and(
+                    Filters.eq("userId", security.id),
+                    Filters.eq("_id", ObjectId(id))
+                )
             )
             .toList()
             .firstOrNull()
@@ -64,14 +90,20 @@ class IncomeRepository(private val mongoClient: MongoClient, private val mongoCo
     fun update(id: String, update: Income): UpdateResult =
         getCollection()
             .replaceOne(
-                Filters.eq("_id", ObjectId(id)),
+                Filters.and(
+                    Filters.eq("userId", security.id),
+                    Filters.eq("_id", ObjectId(id))
+                ),
                 update
             )
 
     fun deleteById(id: String): DeleteResult =
         getCollection()
             .deleteOne(
-                Filters.eq("_id", ObjectId(id))
+                Filters.and(
+                    Filters.eq("userId", security.id),
+                    Filters.eq("_id", ObjectId(id))
+                )
             )
 
     private fun getCollection() =
