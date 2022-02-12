@@ -3,12 +3,22 @@ micronaut:
     name: home-budget
   security:
     authentication: bearer
+    endpoints:
+      login:
+        enabled: true
+      oauth:
+        enabled: true
     token:
       jwt:
         signatures:
           secret:
             generator:
               secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:homeBudgetApplicationDefaultSecret}"'
+        generator:
+          access-token:
+            expiration: 3600
+          refresh-token:
+            secret: '"${JWT_GENERATOR_SIGNATURE_SECRET:homeBudgetApplicationDefaultSecret}"'
 
 mongodb:
   uri: ${MONGO_URI:`mongodb://localhost:27017/database`}
